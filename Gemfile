@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+gem 'pry'
 
 # Declare your gem's dependencies in uncle.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
