@@ -4,6 +4,6 @@ class WidgetsController < ApplicationController
   end
 
   def show
-    head :ok
+    render json: child_resources
   end
 end

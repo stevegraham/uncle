@@ -1,5 +1,5 @@
 class GizmosController < ApplicationController
   def index
-    render text: parent_resource_url
+    render json: parent_resource
   end
 end

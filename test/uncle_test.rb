@@ -7,21 +7,30 @@ class UncleIntegrationTest < ActiveSupport::TestCase
     Dummy::Application
   end
 
-  test 'returning the url of the parent resource' do
+  test 'returning the parent resource from a collection resource' do
     get '/widgets/1/gizmos'
 
-    assert_equal 'http://example.org/widgets/1', last_response.body
+    parent_resource = { 'widgets' => 'http://example.org/widgets/1' }
+
+    assert_equal parent_resource, JSON.parse(last_response.body)
   end
 
-  test 'returning the urls of children resources from a collection resource' do
-    get '/widgets'
+  test 'returning the parent resource from a resource instance' do
+    get '/thingies/1'
 
-    skip
+    parent_resource = { 'thingies' => 'http://example.org/thingies' }
+
+    assert_equal parent_resource, JSON.parse(last_response.body)
   end
 
-  test 'returning the urls of children resources from a resource instance' do
+  test 'returning the child resources from a resource instance' do
     get '/widgets/1'
 
-    skip
+    child_resources = {
+      'gizmos'   => 'http://example.org/widgets/1/gizmos',
+      'doo_dads' => 'http://example.org/widgets/1/doo_dads'
+    }
+
+    assert_equal child_resources, JSON.parse(last_response.body)
   end
 end
