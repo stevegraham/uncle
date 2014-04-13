@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UncleIntegrationTest < ActiveSupport::TestCase
+class UncleTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   def app
@@ -10,7 +10,7 @@ class UncleIntegrationTest < ActiveSupport::TestCase
   test 'returning the parent resource from a collection resource' do
     get '/widgets/1/gizmos'
 
-    parent_resource = { 'widgets' => 'http://example.org/widgets/1' }
+    parent_resource = { 'widget' => 'http://example.org/widgets/1' }
 
     assert_equal parent_resource, JSON.parse(last_response.body)
   end
