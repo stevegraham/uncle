@@ -80,7 +80,7 @@ module Uncle
 
     def node_elimination_block(path)
       lambda do |node|
-        node.value.one? do |r|
+        node.value.any? do |r|
           r.path.to_regexp === path && r.matches?(request)
         end
       end
