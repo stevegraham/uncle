@@ -33,4 +33,15 @@ class UncleTest < ActiveSupport::TestCase
 
     assert_equal child_resources, JSON.parse(last_response.body)
   end
+
+  test 'returning the child resources from the root path' do
+    get '/'
+
+    child_resources = {
+      'widgets'  => 'http://example.org/widgets',
+      'thingies' => 'http://example.org/thingies'
+    }
+    
+    assert_equal child_resources, JSON.parse(last_response.body)
+  end
 end

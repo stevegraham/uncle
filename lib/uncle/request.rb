@@ -43,8 +43,12 @@ module Uncle
 
     def child_resource_nodes
       @child_resource_nodes ||= begin
-        nodes = node_for_path(request.path).siblings
-        node  = nodes.detect { |c| c.key == ":#{resource_name}_id" }
+        node = node_for_path(request.path)
+
+        if node.parent
+          nodes = node.parent.children
+          node  = nodes.detect { |c| c.key == ":#{resource_name}_id" }
+        end
 
         node.children
       end
