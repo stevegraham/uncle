@@ -1,10 +1,15 @@
 Dummy::Application.routes.draw do
   root 'widgets#show'
-  
-  resources :widgets, except: %i<new edit> do
-    resources :gizmos, except: %i<new edit>
-    resources :doo_dads, except: %i<new edit>
+  EXCLUDED_ACTIONS = %i<new edit>.freeze
+
+  resources :widgets, except: EXCLUDED_ACTIONS do
+    resources :gizmos, except: EXCLUDED_ACTIONS
+    resources :doo_dads, except: EXCLUDED_ACTIONS
   end
 
-  resources :thingies, except: %i<new edit>
+  resources :thingies, except: EXCLUDED_ACTIONS
+
+  resource :user, except: EXCLUDED_ACTIONS do
+    resource :profile, controller: 'thingies'
+  end
 end

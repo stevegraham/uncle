@@ -3,8 +3,13 @@ module Uncle
     def parent_resource_name
       node = node_for_path(parent_resource_path)
       name = controller_name_for_path(parent_resource_path)
+      blk  = ->(n) { n.key =~ /[._]?id\Z/ }
 
-      node.key =~ /[._]?id\Z/ ? name.singularize : name
+      if blk[node] || node.children.none?(&blk)
+        name.singularize
+      else
+        name
+      end
     end
 
     def parent_resource_url
@@ -22,9 +27,19 @@ module Uncle
     end
 
     def child_resource_names
-      routes = child_resource_nodes.flat_map(&:value).select { |r| r.matches?(request) }
+      child_resource_nodes.reduce([]) do |memo, node|
+        routes = node.value.select { |route| route.matches?(request) }
 
-      routes.map { |r| r.app.defaults[:controller] }
+        routes.map! do |route|
+          if node.children.any? { |n| n.key =~ /[._]?id\Z/ }
+            route.app.defaults[:controller]
+          else
+            route.app.defaults[:controller].singularize
+          end
+        end
+
+        memo.push(*routes)
+      end
     end
 
     def child_resource_urls

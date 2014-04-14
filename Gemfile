@@ -14,6 +14,7 @@ gemspec
 # dependency down to a specific version, move it to your gemspec.
 gem 'sqlite3'
 gem 'rails',  github: 'stevegraham/rails', branch: 'new_router'
+gem 'pry'
 
 # To use debugger
 # gem 'debugger'

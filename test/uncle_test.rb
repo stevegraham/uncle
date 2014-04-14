@@ -39,9 +39,18 @@ class UncleTest < ActiveSupport::TestCase
 
     child_resources = {
       'widgets'  => 'http://example.org/widgets',
-      'thingies' => 'http://example.org/thingies'
+      'thingies' => 'http://example.org/thingies',
+      'user'     => 'http://example.org/user'
     }
-    
+
     assert_equal child_resources, JSON.parse(last_response.body)
+  end
+
+  test 'singleton resources have singularized keys' do
+    get '/user/profile'
+
+    parent_resource = { 'user' => 'http://example.org/user' }
+
+    assert_equal parent_resource, JSON.parse(last_response.body)
   end
 end
