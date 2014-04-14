@@ -2,6 +2,8 @@
 
 ### Experimental!
 
+Uncle depends on my Rails fork because it uses a different router to reflect on the route set
+
 ### Ruby on Rails URL helpers for relative resources
 
 Helpers methods that reflect on your application route set to dynamically infer
