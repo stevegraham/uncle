@@ -60,5 +60,5 @@ GET /widgets/1/gizmos returns { 'widgets': 'http://example.org/widgets/1' }
 
 GET /widgets/1 returns { 'gizmos': 'http://example.org/widgets/1/gizmos', 'doo_dads': 'http://example.org/widgets/1/doo_dads' }
 
-GET /thingies/1` returns `{ 'widgets': 'http://example.org/thingies' }
+GET /thingies/1` returns `{ 'thingy': 'http://example.org/thingies' }
 ```
