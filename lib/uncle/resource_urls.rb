@@ -5,10 +5,6 @@ module Uncle
     end
 
     def child_resources
-      uncle_request.child_resources
-    end
-
-    def child_resources
       Hash[uncle_request.child_resource_names.zip(uncle_request.child_resource_urls)]
     end
 
