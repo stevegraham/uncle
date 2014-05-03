@@ -1,5 +1,12 @@
 module Uncle
-  class Request < Struct.new(:request)
+  class Request
+    attr_reader :request, :routeset
+
+    def initialize(request, routeset = Rails.application.routes)
+      @request  = request
+      @routeset = routeset
+    end
+
     def parent_resource_name
       node = node_for_path(parent_resource_path)
       name = controller_name_for_path(parent_resource_path)
@@ -43,14 +50,18 @@ module Uncle
     end
 
     def child_resource_urls
-      params    = request.params.dup
+      child_resource_paths.map do |path|
+        request.protocol + request.host_with_port + path
+      end
+    end
+
+    def child_resource_paths
       key_paths = child_resource_nodes.map(&:to_key_path)
 
-      params["#{resource_name}_id"] = params.delete('id') if params.has_key?('id')
+      params[:"#{resource_name}_id"] = params.delete(:id) if params.has_key?(:id)
 
       key_paths.map! do |kp|
-        kp.map! { |segment| params[segment.tr(':', '')] || segment }
-        request.protocol + request.host_with_port + kp.join('/')
+        kp.map! { |segment| params[segment.tr(':', '').to_sym] || segment }.join('/')
       end
     end
 
@@ -69,12 +80,12 @@ module Uncle
       end
     end
 
-    def resource_name
-      routeset.recognize_path(request.path)[:controller].singularize
+    def params
+      @params ||= routeset.recognize_path(request.path)
     end
 
-    def routeset
-      Rails.application.routes
+    def resource_name
+      params[:controller].singularize
     end
 
     def controller_name_for_path(path)
