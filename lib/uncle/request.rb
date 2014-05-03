@@ -1,5 +1,5 @@
 module Uncle
-  class Request < Struct.new(:request, :controller)
+  class Request < Struct.new(:request)
     def parent_resource_name
       node = node_for_path(parent_resource_path)
       name = controller_name_for_path(parent_resource_path)
@@ -70,11 +70,7 @@ module Uncle
     end
 
     def resource_name
-      controller_name.singularize
-    end
-
-    def controller_name
-      controller.controller_name
+      routeset.recognize_path(request.path)[:controller].singularize
     end
 
     def routeset

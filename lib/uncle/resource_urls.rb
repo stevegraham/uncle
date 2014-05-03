@@ -11,7 +11,7 @@ module Uncle
     private
 
     def uncle_request
-      @uncle_request ||= Uncle::Request.new(request, self)
+      @uncle_request ||= Uncle::Request.new(request)
     end
   end
 end
