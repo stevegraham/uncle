@@ -65,4 +65,25 @@ class UncleRequestTest < ActiveSupport::TestCase
       ['/widgets', '/thingies', '/user']
   end
 
+  test 'child resource paths takes a block that returns resources where the block evaluates to true' do
+    assert_equal uncle('/').child_resource_paths { |p| false }, []
+  end
+
+  test 'child resource paths takes a block that yields each paths params' do
+    params = []
+    uncle('/').child_resource_paths { |p| params << p }
+
+    assert_equal params, uncle('/').child_resource_paths.map { |p| routeset.recognize_path p }
+  end
+
+  test 'child resource names takes a block that returns resources where the block evaluates to true' do
+    assert_equal uncle('/').child_resource_names { |p| false }, []
+  end
+
+  test 'child resource names takes a block that yields each paths params' do
+    params = []
+    uncle('/').child_resource_names { |p| params << p }
+
+    assert_equal params, uncle('/').child_resource_names.map { |p| routeset.recognize_path p }
+  end
 end

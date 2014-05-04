@@ -33,35 +33,38 @@ module Uncle
        end
     end
 
-    def child_resource_names
-      child_resource_nodes.reduce([]) do |memo, node|
-        routes = node.value.select { |route| route.matches?(request) }
+    def child_resource_names(&blk)
+      child_resource_paths(&blk).map do |path|
+        node = node_for_path(path)
+        name = routeset.recognize_path(path)[:controller]
 
-        routes.map! do |route|
-          if node.children.any? { |n| n.key =~ /[._]?id\Z/ }
-            route.app.defaults[:controller]
-          else
-            route.app.defaults[:controller].singularize
-          end
+        if node.children.any? { |n| n.key =~ /[._]?id\Z/ }
+          name
+        else
+          name.singularize
         end
-
-        memo.push(*routes)
       end
     end
 
-    def child_resource_urls
-      child_resource_paths.map do |path|
+    def child_resource_urls(&blk)
+      child_resource_paths(&blk).map do |path|
         request.protocol + request.host_with_port + path
       end
     end
 
-    def child_resource_paths
+    def child_resource_paths(&blk)
       key_paths = child_resource_nodes.map(&:to_key_path)
 
       params[:"#{resource_name}_id"] = params.delete(:id) if params.has_key?(:id)
 
       key_paths.map! do |kp|
         kp.map! { |segment| params[segment.tr(':', '').to_sym] || segment }.join('/')
+      end
+
+      if block_given?
+        key_paths.select { |p| blk.call routeset.recognize_path(p) }
+      else
+        key_paths
       end
     end
 
