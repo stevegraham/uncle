@@ -92,11 +92,7 @@ module Uncle
     end
 
     def controller_name_for_path(path)
-      route = routeset.routes.match(path).
-        flat_map(&:value).
-        detect { |r| r.path.to_regexp === path && r.matches?(request) }
-
-      route.app.defaults[:controller]
+      routeset.recognize_path(path)[:controller]
     end
 
     def node_for_path(path)
