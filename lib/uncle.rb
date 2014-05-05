@@ -1,6 +1,6 @@
 require 'uncle/railtie'
 require 'uncle/request'
-require 'uncle/resource_urls'
+require 'uncle/resource'
 
 module Uncle
 end

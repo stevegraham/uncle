@@ -10,7 +10,7 @@ class UncleTest < ActiveSupport::TestCase
   test 'returning the parent resource from a collection resource' do
     get '/widgets/1/gizmos'
 
-    parent_resource = { 'widget' => 'http://example.org/widgets/1' }
+    parent_resource = { 'widget' => '/widgets/1' }
 
     assert_equal parent_resource, JSON.parse(last_response.body)
   end
@@ -18,7 +18,7 @@ class UncleTest < ActiveSupport::TestCase
   test 'returning the parent resource from a resource instance' do
     get '/thingies/1'
 
-    parent_resource = { 'thingies' => 'http://example.org/thingies' }
+    parent_resource = { 'thingies' => '/thingies' }
 
     assert_equal parent_resource, JSON.parse(last_response.body)
   end
@@ -27,8 +27,8 @@ class UncleTest < ActiveSupport::TestCase
     get '/widgets/1'
 
     child_resources = {
-      'gizmos'   => 'http://example.org/widgets/1/gizmos',
-      'doo_dads' => 'http://example.org/widgets/1/doo_dads'
+      'gizmos'   => '/widgets/1/gizmos',
+      'doo_dads' => '/widgets/1/doo_dads'
     }
 
     assert_equal child_resources, JSON.parse(last_response.body)
@@ -38,9 +38,9 @@ class UncleTest < ActiveSupport::TestCase
     get '/'
 
     child_resources = {
-      'widgets'  => 'http://example.org/widgets',
-      'thingies' => 'http://example.org/thingies',
-      'user'     => 'http://example.org/user'
+      'widgets'  => '/widgets',
+      'thingies' => '/thingies',
+      'user'     => '/user'
     }
 
     assert_equal child_resources, JSON.parse(last_response.body)
@@ -49,7 +49,7 @@ class UncleTest < ActiveSupport::TestCase
   test 'singleton resources have singularized keys' do
     get '/user/profile'
 
-    parent_resource = { 'user' => 'http://example.org/user' }
+    parent_resource = { 'user' => '/user' }
 
     assert_equal parent_resource, JSON.parse(last_response.body)
   end

@@ -41,6 +41,10 @@ class UncleRequestTest < ActiveSupport::TestCase
     assert_equal uncle('/widgets/18').parent_resource_path, '/widgets'
   end
 
+  test 'inferring the parent resource url' do
+    assert_equal uncle('/widgets/18').parent_resource_url, 'http://test.host/widgets'
+  end
+
   test 'parent resource name is singular when it is a singelton' do
     assert_equal uncle('/user/profile').parent_resource_name, 'user'
   end
@@ -55,6 +59,12 @@ class UncleRequestTest < ActiveSupport::TestCase
       ['/widgets/1/gizmos', '/widgets/1/doo_dads']
   end
 
+  test 'inferring the child resource urls from a resource instance' do
+    assert_equal \
+      uncle('/widgets/1').child_resource_urls,
+      ['http://test.host/widgets/1/gizmos', 'http://test.host/widgets/1/doo_dads']
+  end
+
   test 'returning the child resource names from the root path' do
     assert_equal uncle('/').child_resource_names, ['widgets', 'thingies', 'user']
   end
@@ -63,6 +73,12 @@ class UncleRequestTest < ActiveSupport::TestCase
     assert_equal \
       uncle('/').child_resource_paths,
       ['/widgets', '/thingies', '/user']
+  end
+
+  test 'returning the child resource urls from the root path' do
+    assert_equal \
+      uncle('/').child_resource_urls,
+      ['http://test.host/widgets', 'http://test.host/thingies', 'http://test.host/user']
   end
 
   test 'child resource paths takes a block that returns resources where the block evaluates to true' do
@@ -74,6 +90,17 @@ class UncleRequestTest < ActiveSupport::TestCase
     uncle('/').child_resource_paths { |p| params << p }
 
     assert_equal params, uncle('/').child_resource_paths.map { |p| routeset.recognize_path p }
+  end
+
+  test 'child resource urls takes a block that returns resources where the block evaluates to true' do
+    assert_equal uncle('/').child_resource_urls { |p| false }, []
+  end
+
+  test 'child resource urlss takes a block that yields each paths params' do
+    params = []
+    uncle('/').child_resource_urls { |p| params << p }
+
+    assert_equal params, uncle('/').child_resource_urls.map { |p| routeset.recognize_path p }
   end
 
   test 'child resource names takes a block that returns resources where the block evaluates to true' do

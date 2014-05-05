@@ -28,7 +28,7 @@ module Uncle
          node     = node_for_path(request.path)
          key_path = node.parent.to_key_path
 
-         key_path.map! { |segment| request.params[segment.tr(':', '')] || segment }
+         key_path.map! { |segment| params[segment.tr(':', '').to_sym] || segment }
          key_path.join('/')
        end
     end
